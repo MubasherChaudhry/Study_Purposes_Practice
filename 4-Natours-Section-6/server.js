@@ -1,13 +1,13 @@
-const dotenv=require('dotenv')
+const dotenv= require('dotenv')
+dotenv.config({path:'./config.env'})
 const app =require('./app')
 
-dotenv.config({path:'./config.env'})
 
-console.log(process.env);
+
 // console.log(app.get('env')); use this to define development environment 
 
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`App is running on port:${PORT}`);
+const port =process.env.PORT || 5050;
+app.listen(port, () => {
+  console.log(`App is running on port:${port}`);
 });
 
