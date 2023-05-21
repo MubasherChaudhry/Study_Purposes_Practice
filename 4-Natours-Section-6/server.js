@@ -36,6 +36,20 @@ const tourSchema= new mongoose.Schema({
 })
 const Tour=mongoose.model('Tour',tourSchema)
 
+const testTour = new Tour({
+name:'the forest Biker',
+rating:4.7,
+price:497
+})
+
+testTour
+.save()
+.then(doc=>{
+console.log(doc);
+})
+.catch(err=>{
+console.log('ERROR',err);
+})
 // console.log(app.get('env')); use this to define development environment
 
 const port = process.env.PORT || 5050;
