@@ -8,7 +8,7 @@ exports.getAllUsers = (req, res) => {
   });
 };
 exports.createUsers = (req, res) => {
-  res.status(500).json({
+  res.status(201).json({
     status: 'Error',
     message: 'this route is not yet define',
   });
