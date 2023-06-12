@@ -1,5 +1,4 @@
-const express=require('express')
-
+const express = require('express');
 
 exports.getAllUsers = (req, res) => {
   res.status(500).json({
