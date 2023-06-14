@@ -1,7 +1,7 @@
 class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
-    this.queryyString = queryString;
+    this.queryString = queryString;
   }
 
   filter() {
@@ -45,4 +45,4 @@ class APIFeatures {
     return this;
   }
 }
-module.exportd = APIFeatures;
+module.exports = APIFeatures;
