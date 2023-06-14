@@ -19,15 +19,15 @@ exports.aliasTopTours = (req, res, next) => {
   next()
 } */
 
-exports.checkBody = (req, res, next) => {
-  if (!req.body.name || !req.body.price) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Missing name or Price ',
-    });
-  }
-  next();
-};
+// exports.checkBody = (req, res, next) => {
+//   if (!req.body.name || !req.body.price) {
+//     return res.status(400).json({
+//       status: 'fail',
+//       message: 'Missing name or Price ',
+//     });
+//   }
+//   next();
+// };
 
 exports.getAllTours = catchAsync(async (req, res, next) => {
   // EXECUTE QUERY
