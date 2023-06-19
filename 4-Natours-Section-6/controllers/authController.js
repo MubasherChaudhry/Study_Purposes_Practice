@@ -18,6 +18,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
     passwordChangedAt: req.body.passwordChangedAt,
+    role: req.body.role,
   });
 
   const token = signToken(newUser._id);
@@ -56,7 +57,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   ) {
     token = req.headers.authorization.split(' ')[1];
   }
-  console.log(token);
+  // console.log(token);
   if (!token) {
     return next(
       new AppError('You are not log In! Please log in to get access')
@@ -87,3 +88,18 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   next();
 });
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    //roles is an array['admin','lead-guide'].role='user'
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError(
+          'you do not have the permission to perform this action',
+          403
+        )
+      );
+    }
+    next();
+  };
+};
