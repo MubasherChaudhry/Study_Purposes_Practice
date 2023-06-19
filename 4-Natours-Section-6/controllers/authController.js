@@ -2,6 +2,7 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('../utils/catchAsync');
+const sendEmail = require('../utils/email');
 const AppError = require('../utils/appError');
 //create User
 const signToken = (id) => {
@@ -117,6 +118,37 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   //3) send it to user's email
+  const resetURL = `${req.protocol}://${req.get(
+    'host'
+  )}/api/v1/users/resetPassword/${resetToken}`;
+
+  const message = `Forgot your Password ? submit a PATCH request with your new password and ConfirmPassword to :
+  ${resetURL}.\nif you didn't forget your password please ignore the email!`;
+
+  try {
+    await sendEmail({
+      email: user.email,
+      subject: 'your password reset token ( Valid till 10 mins)',
+      message,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token send ti E-mail',
+    });
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+    return next(
+      new AppError('There was an error sending the email.try again later', 500)
+    );
+  }
 });
 
-exports.resetPassword = (req, res, next) => {};
+exports.resetPassword = (req, res, next) => {
+  //1) get user based on token
+  //2) if token is not expire, and there is a user , set a new password
+  //3) update change Password at property of user
+  //4) Log the user in , send JWT
+};
