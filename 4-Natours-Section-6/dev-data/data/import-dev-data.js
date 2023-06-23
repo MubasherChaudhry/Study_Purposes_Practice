@@ -21,17 +21,14 @@ mongoose
 
 //Read the Json File
 
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/tours-simple.json`, 'utf-8')
-);
+const tours = JSON.parse(fs.readFileSync(`${__dirname}/tours.json`, 'utf-8'));
 //import the data into DC
 
 const importData = async () => {
   try {
     await Tour.create(tours);
     console.log('Data Successfully Loaded');
-    process.exit()
-
+    process.exit();
   } catch (err) {
     console.log(err);
   }
@@ -43,7 +40,7 @@ const deleteData = async () => {
   try {
     await Tour.deleteMany();
     console.log('Data Successfully Deleted');
-    process.exit()
+    process.exit();
   } catch (err) {
     console.log(err);
   }
