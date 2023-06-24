@@ -1,9 +1,8 @@
 //const { query } = require('express');
+// const AppError = require('../utils/appError');
 const Tour = require('../models/tourModel');
-const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
-const factory = require('../controllers/handlerFactory');
+const factory = require('./handlerFactory');
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';
@@ -11,56 +10,15 @@ exports.aliasTopTours = (req, res, next) => {
   req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
   next();
 };
-
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  //Build the Query
-  console.log(req.query);
-
-  //Execute the Query
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const tours = await features.query;
-  //query.sort().select().skip().limit()
-
-  ///Send Response
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: { tours },
-  });
-});
+exports.getAllTours = factory.getAll(Tour);
 /// Reading
-
-exports.getTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findById(req.params.id).populate('reviews');
-  //Tour.findONe({_id: req.params.id}) -> same way from above, we can query for that <field></field>
-  if (!tour) {
-    return next(new AppError('No tours found with that ID', 404));
-  }
-  res.status(200).json({
-    status: 'success',
-    data: { tour },
-  });
-});
-
+exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 ////Creating
 exports.createTour = factory.createOne(Tour);
 ///////Update
 exports.updateTour = factory.updateOne(Tour);
 ///////Delete
 exports.deleteTour = factory.deleteOne(Tour);
-
-// exports.deleteTour = catchAsync(async (req, res, next) => {
-//   const tour = await Tour.findByIdAndDelete(req.params.id);
-//   if (!tour) {
-//     return next(new AppError('No tours found with that ID', 404));
-//   }
-//   //204- No Content
-//   res.status(204).json({ status: 'success', data: null });
-// });
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([
